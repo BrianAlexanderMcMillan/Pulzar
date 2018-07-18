@@ -1,3 +1,4 @@
+#!python*
 import mmap
 import os
 import struct
