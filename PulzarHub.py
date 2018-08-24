@@ -26,9 +26,9 @@ def main():
         if i != new_i or s != new_s:
             print 'i: %s => %d' % (i, new_i)
             print 's: %s => %s' % (s, new_s)
-	    print data[3], data[2] 
-            print buf[42]
-            print struct.unpack('B',buf[42])
+            print "1:", data[3], data[2] 
+            print "2:", buf[42]
+            print "3:", struct.unpack('B',buf[42])
             print 'Press Ctrl-C to exit'
             i = new_i
             s = new_s

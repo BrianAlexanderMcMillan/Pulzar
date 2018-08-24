@@ -46,7 +46,10 @@ def main():
     # And finally set it
     s.raw = 'foo'
 
-    buf[42] = '\x77'
+    dmxdata = bytearray(512)  # Our universe
+    dmxdata[42] = 210
+    buf[42] = chr(dmxdata[42])
+
     print 'First 10 bytes of memory mapping: %r' % buf[:10]
     raw_input('Now run b.py and press ENTER')
 
