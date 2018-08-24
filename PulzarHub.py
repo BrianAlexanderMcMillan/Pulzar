@@ -1,4 +1,7 @@
 #!python
+#
+# This is the server image that takes whatever it receives from clients and sends to the DMX driver
+#
 import mmap
 import os
 import struct
