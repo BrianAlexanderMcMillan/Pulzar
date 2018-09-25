@@ -5,12 +5,14 @@ import struct
 import time
 import array
 
+num_Frames = 100
+
 def main():
     # Open the file for reading
     fd = os.open('/tmp/DMX_Data', os.O_RDONLY)
 
     # Memory map the file
-    buf = mmap.mmap(fd, mmap.PAGESIZE, mmap.MAP_SHARED, mmap.PROT_READ)
+    buf = mmap.mmap(fd, 512*num_Frames, mmap.MAP_SHARED, mmap.PROT_READ)
 
     i = None
     s = None
