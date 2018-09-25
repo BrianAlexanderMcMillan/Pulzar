@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from ctypes import *
+import ctypes
 import mmap
 import os
 import struct
