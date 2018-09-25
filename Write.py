@@ -7,7 +7,7 @@ import struct
 class fixed_size_frame_512(Structure):
     _fields_ = [("data",c_ubyte * 512)]
 
-num_frames = 100
+num_Frames = 100
 
 def main():
     
