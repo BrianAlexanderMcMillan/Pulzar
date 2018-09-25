@@ -4,7 +4,7 @@ import mmap
 import os
 import struct
 
-class fixed_size_frame_512(Structure):
+class fixed_size_frame_512(ctypes.Structure):
     _fields_ = [("data",c_ubyte * 512)]
 
 num_Frames = 100
