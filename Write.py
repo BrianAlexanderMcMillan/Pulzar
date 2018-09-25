@@ -1,11 +1,18 @@
 #!/usr/bin/env python
-import ctypes
+from ctypes import *
 import mmap
 import os
 import struct
 
+class fixed_size_frame_512(Structure):
+    _fields_ = [("data",c_ubyte * 512)]
+
+num_frames = 100
 
 def main():
+    
+    
+    
     # Create new empty file to back memory map on disk
     fd = os.open('/tmp/DMX_Data', os.O_CREAT | os.O_TRUNC | os.O_RDWR)
 
@@ -17,7 +24,7 @@ def main():
     # length: Must in multiples of PAGESIZE (usually 4 KB)
     # flags: MAP_SHARED means other processes can share this mmap
     # prot: PROT_WRITE means this process can write to this mmap
-    buf = mmap.mmap(fd, mmap.PAGESIZE, mmap.MAP_SHARED, mmap.PROT_WRITE)
+    buf = mmap.mmap(fd, 512*num_Frames, mmap.MAP_SHARED, mmap.PROT_WRITE)
 
     # Now create an int in the memory mapping
     i = ctypes.c_int.from_buffer(buf)
