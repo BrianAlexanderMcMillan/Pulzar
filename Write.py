@@ -5,7 +5,7 @@ import os
 import struct
 
 class fixed_size_frame_512(ctypes.Structure):
-    _fields_ = [("data",c_ubyte * 512)]
+    _fields_ = [("data",ctypes.c_byte * 512)]
 
 num_Frames = 100
 Frame_Size = 512
