@@ -6,13 +6,21 @@ import time
 import array
 
 num_Frames = 100
+Frame_Size = 512
+Buffer_Size = Frame_Size * num_Frames
+
+class fixed_size_frame_512(ctypes.Structure):
+    _fields_ = [("data",ctypes.c_byte * 512)]
+
 
 def main():
     # Open the file for reading
     fd = os.open('/tmp/DMX_Data', os.O_RDONLY)
 
     # Memory map the file
-    buf = mmap.mmap(fd, 512*num_Frames, mmap.MAP_SHARED, mmap.PROT_READ)
+    buf = mmap.mmap(fd, Buffer_Size, mmap.MAP_SHARED, mmap.PROT_READ)
+	
+    frames = [memoryview(buf)[512*i : 512*(i+1)] for i in range(num_Frames)]
 
     i = None
     s = None
