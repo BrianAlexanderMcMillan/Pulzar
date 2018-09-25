@@ -8,6 +8,8 @@ class fixed_size_frame_512(Structure):
     _fields_ = [("data",c_ubyte * 512)]
 
 num_Frames = 100
+Frame_Size = 512
+Buffer_Size = Frame_Size * num_Frames
 
 def main():
     
@@ -17,14 +19,14 @@ def main():
     fd = os.open('/tmp/DMX_Data', os.O_CREAT | os.O_TRUNC | os.O_RDWR)
 
     # Zero out the file to insure it's the right size
-    assert os.write(fd, '\x00' * mmap.PAGESIZE) == mmap.PAGESIZE
+    assert os.write(fd, '\x00' * Buffer_Size) == Buffer_Size
 
     # Create the mmap instace with the following params:
     # fd: File descriptor which backs the mapping or -1 for anonymous mapping
     # length: Must in multiples of PAGESIZE (usually 4 KB)
     # flags: MAP_SHARED means other processes can share this mmap
     # prot: PROT_WRITE means this process can write to this mmap
-    buf = mmap.mmap(fd, 512*num_Frames, mmap.MAP_SHARED, mmap.PROT_WRITE)
+    buf = mmap.mmap(fd, Buffer_Size, mmap.MAP_SHARED, mmap.PROT_WRITE)
 
     # Now create an int in the memory mapping
     i = ctypes.c_int.from_buffer(buf)
