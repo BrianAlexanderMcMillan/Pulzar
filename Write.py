@@ -27,6 +27,10 @@ def main():
     # flags: MAP_SHARED means other processes can share this mmap
     # prot: PROT_WRITE means this process can write to this mmap
     buf = mmap.mmap(fd, Buffer_Size, mmap.MAP_SHARED, mmap.PROT_WRITE)
+	
+    frames = [memoryview(buf)[512*i : 512*(i+1)] for i in range(num_Frames)]
+    frames[1].data[3] = 12
+   
 
     # Now create an int in the memory mapping
     i = ctypes.c_int.from_buffer(buf)
