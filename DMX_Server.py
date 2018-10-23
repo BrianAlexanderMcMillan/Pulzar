@@ -35,9 +35,9 @@ class EchoHandler(BaseRequestHandler):
 #        if not DMXData:
 #            break
 
-DMXData.append(21)
-DMXData.append(0)
-DMXData.append(42)
+        DMXData.append(21)
+        DMXData.append(0)
+        DMXData.append(42)
 
         global wrapper
         wrapper = ClientWrapper()
