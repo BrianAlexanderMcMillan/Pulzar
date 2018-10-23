@@ -24,7 +24,7 @@ def DmxSent(status):
 
 DMXData = array.array('B')
 
-#class EchoHandler(BaseRequestHandler):
+class EchoHandler(BaseRequestHandler):
 #    def handle(self):
 #        print('Got connection from', self.client_address)
 #        while True:
