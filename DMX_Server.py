@@ -26,19 +26,18 @@ DMXData = array.array('B')
 
 class EchoHandler(BaseRequestHandler):
     def handle(self):
-#        print('Got connection from', self.client_address)
-#        while True:
-#            DMXData = self.request.recv(512)
-#            for i in range(10):
-#                print ('RECV: ', DMXData[i],':')
-#            break
-#        if not DMXData:
-#            break
+        print('Got connection from', self.client_address)
+        while True:
+            RecvMsg = self.request.recv(512)
+            for i in range(10):
+                print ('RECV: ', RecvMsg[i],':')
+            break
+        if not RecvMsg:
+            break
 
-        DMXData.append(21)
-        DMXData.append(0)
-        DMXData.append(42)
-
+        for i in range(512):
+            DMXData.append(recvMsg[i])
+        
         global wrapper
         wrapper = ClientWrapper()
         client = wrapper.Client()
