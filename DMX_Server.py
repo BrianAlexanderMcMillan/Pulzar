@@ -36,7 +36,7 @@ class EchoHandler(BaseRequestHandler):
               break
 
         for i in range(512):
-            DMXData.append(RecvMsg[i])
+            DMXData.append(ord(RecvMsg[i]))
         
         global wrapper
         wrapper = ClientWrapper()
