@@ -1,6 +1,9 @@
 from socket import socket, AF_INET, SOCK_STREAM
 
-DMXData = bytearray(1024)
+DMXData = array.array(B)
+
+for i in range(1024)
+    DMXData[i] = 0;
 
 DMXData[0] = 48
 DMXData[1] = 50
