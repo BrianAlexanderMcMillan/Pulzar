@@ -35,7 +35,8 @@ class EchoHandler(BaseRequestHandler):
         wrapper = ClientWrapper()
         client = wrapper.Client()
   # send 1 dmx frame
-        client.SendDmx(universe, DMXData[0:512], DmxSent)
+        Universe = 1
+        client.SendDmx(Universe, DMXData[0:512], DmxSent)
         wrapper.Run()
 
         
