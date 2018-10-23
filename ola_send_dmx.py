@@ -16,7 +16,7 @@
 # ola_send_dmx.py
 # Copyright (C) 2005 Simon Newton
 
-"""Send some DMX data."""
+"""Send some DMX data."""     
 
 from __future__ import print_function
 from ola.ClientWrapper import ClientWrapper
