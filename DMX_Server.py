@@ -19,7 +19,7 @@ def DmxSent(status):
 
 
 
-DMXData = array('B')
+DMXData = array.array('B')
 
 class EchoHandler(BaseRequestHandler):
     def handle(self):
