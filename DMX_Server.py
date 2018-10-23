@@ -32,8 +32,8 @@ class EchoHandler(BaseRequestHandler):
             for i in range(10):
                 print ('RECV: ', RecvMsg[i],':')
             break
-        if not RecvMsg:
-            break
+            if not RecvMsg:
+              break
 
         for i in range(512):
             DMXData.append(recvMsg[i])
