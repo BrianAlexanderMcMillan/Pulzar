@@ -25,7 +25,7 @@ class EchoHandler(BaseRequestHandler):
     def handle(self):
         print('Got connection from', self.client_address)
         while True:
-            DMXData = self.request.recv(1024)
+            DMXData = self.request.recv(512)
             for i in range(10):
                 print ('RECV: ', DMXData[i],':')
             break
@@ -36,7 +36,7 @@ class EchoHandler(BaseRequestHandler):
         client = wrapper.Client()
   # send 1 dmx frame
         Universe = 1
-        client.SendDmx(Universe, DMXData[0:512], DmxSent)
+        client.SendDmx(Universe, DMXData, DmxSent)
         wrapper.Run()
 
         
