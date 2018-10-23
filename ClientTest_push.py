@@ -1,7 +1,7 @@
 from socket import socket, AF_INET, SOCK_STREAM
 import array
 
-DMXData = array.array(B)
+DMXData = array.array('B')
 
 for i in range(1024):
     DMXData[i] = 0;
