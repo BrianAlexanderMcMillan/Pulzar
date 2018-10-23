@@ -3,7 +3,10 @@ from ola.ClientWrapper import ClientWrapper
 import array
 import sys
 
+__author__ = 'nomis52@gmail.com (Simon Newton)'
+
 from SocketServer import BaseRequestHandler, TCPServer
+
 wrapper = None
 
 
@@ -21,16 +24,21 @@ def DmxSent(status):
 
 DMXData = array.array('B')
 
-class EchoHandler(BaseRequestHandler):
-    def handle(self):
-        print('Got connection from', self.client_address)
-        while True:
-            DMXData = self.request.recv(512)
-            for i in range(10):
-                print ('RECV: ', DMXData[i],':')
-            break
+#class EchoHandler(BaseRequestHandler):
+#    def handle(self):
+#        print('Got connection from', self.client_address)
+#        while True:
+#            DMXData = self.request.recv(512)
+#            for i in range(10):
+#                print ('RECV: ', DMXData[i],':')
+#            break
 #        if not DMXData:
 #            break
+
+DMXData.append(21)
+DMXData.append(0)
+DMXData.append(42)
+
         global wrapper
         wrapper = ClientWrapper()
         client = wrapper.Client()
