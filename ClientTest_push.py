@@ -4,7 +4,7 @@ import array
 DMXData = array.array('B')
 
 for i in range(1024):
-    DMXData[i] = 0;
+    DMXData.append(0);
 
 DMXData[0] = 48
 DMXData[1] = 50
