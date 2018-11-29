@@ -6,11 +6,60 @@ import csv
 import time
 
 __author__ = 'brian.mcmillan@steeplesquare.co.uk'
+
+										# Saved definitions 
+ColoursSource = "Colours.rgb"
 FixturesSource = "Fixtures."
+PatternsSource = "Patterns.Data"
+SequencesSource = "Sequences.Data"
 
 # http://www.rentaliowa.com/pa_system_rentals/rgbcolorchart.htm
-#http://www.blue-room.org.uk/wiki/RGB_Colours
-#https://www.nlfxpro.com/ben-stowes-rgbaw-color-mixing-chart/
+# http://www.blue-room.org.uk/wiki/RGB_Colours
+# https://www.nlfxpro.com/ben-stowes-rgbaw-color-mixing-chart/
+
+
+class c_Patterns:
+	def __init__(self):
+		PatternsFile = open(PatternsSource)
+		PatternsData = csv.reader(PatternsFile, delimiter=',', quotechar='"')
+		self.Patterns_Count=0
+		self.Patterns = []
+		for Pattern in PatternsData:
+			Values = [str.strip(column) for column in Pattern]
+			print(Values)
+			if self.Patterns_Count == 0:
+				self.Patterns.insert(0,Values)
+				self.Patterns_Count += 1
+			else:
+				self.Patterns.append(Values)
+				self.Patterns_Count += 1
+		print ("Read ", self.Patterns_Count, " pattern definitions from file")
+
+	def Print(self):
+		for Pattern in self.Patterns:
+			TmpStr = "Pattern: " + Pattern[0] + " [" + Pattern[1]
+			for i in range(2,len(Pattern)):
+			 	TmpStr +=  ", " + Pattern[i]
+			TmpStr += "]"
+			print(TmpStr)
+
+class c_Sequences:
+	def __init__(self):
+		SequencesFile = open(SequencesSource)
+		SequencesData = csv.reader(SequencesFile, delimiter=',', quotechar='"')
+		self.Sequences_Count=0
+		self.Sequences = []
+		for Sequence in SequencesData:
+			Values = [int(column) for column in Sequence]
+			self.Sequences.append(Values)
+			self.Sequences_Count += 1
+		print ("Read ", self.Sequences_Count, " sequence definitions from file")
+
+	def Print(self):
+		for Sequence in self.Sequences:
+			print("Sequence ", Sequence[0], 
+			      ", Group: ", Sequence[1], 
+				  ", Pattern: ", Sequence[2])
 
 
 class c_Group:
@@ -21,11 +70,11 @@ class c_Group:
 		self.Group.append(Fixture)
 
 	def Print(self):
-			print(self.Group)
+		print(self.Group)
 
 class c_ColourTable:
 	def __init__(self):
-		ColoursFile = open("Colours.rgb")
+		ColoursFile = open(ColoursSource)
 		ColoursData = csv.reader(ColoursFile, delimiter=',', quotechar='"')
 		self.Colours_Count=0
 		self.Colours = []
@@ -43,7 +92,7 @@ class c_ColourTable:
 									int(Colour[3])] )
 				self.Colours_Count += 1
 		ColoursFile.close()
-		print ("Read ", self.Colours_Count, " colour definitons from file")
+		print ("Read ", self.Colours_Count, " colour definitions from file")
 
 	def Print(self):		
 		for Colour in self.Colours:
@@ -60,6 +109,7 @@ class c_Fixtures:
 		self.Fixtures = []
 		for Fixture in FixturesData:
 			Values = [int(column) for column in Fixture]
+#			print(Values)
 			if self.Fix_Count == 0:
 				self.Fixtures.insert(0, Values)
 				self.Fix_Count += 1
@@ -104,9 +154,14 @@ if __name__ == '__main__':
 	ColourTable = c_ColourTable()
 	ColourTable.Print()
 
-	Fixtures = c_Fixtures("Promo")
+	PatternList = c_Patterns()
+	PatternList.Print()
 
+	Fixtures = c_Fixtures("Promo")
 	Fixtures.Print()
+
+	Sequences = c_Sequences()
+	Sequences.Print()
 
 	BarA = c_Group()
 	BarA.Add(1)
@@ -115,7 +170,6 @@ if __name__ == '__main__':
 
 	BarA.Print()
 
-#	print(Fixtures.Get(3))
 
 #	while True:
 	for i in range(10):	
