@@ -3,7 +3,7 @@ from ola.ClientWrapper import ClientWrapper
 import array
 import sys
 
-__author__ = 'nomis52@gmail.com (Simon Newton)'
+__author__ = 'brian.mcmillan@steeplesquare.co.uk'
 
 from SocketServer import BaseRequestHandler, TCPServer
 
@@ -50,6 +50,6 @@ class EchoHandler(BaseRequestHandler):
         self.request.send(b'ACK')
 
 if __name__ == '__main__':
-    serv = TCPServer(('', 20000), EchoHandler)
+    serv =  TCPServer(('', 20000), EchoHandler)
     print('Echo server running on port 20000')
     serv.serve_forever()

@@ -1,3 +1,4 @@
-P00, Red, Blue, Red, Green, Black
-P01, Red, Blue, Green
-P02, Red, Black
+0,"[Red, Blue, Red, Green, Black]"
+1,"[Red, Blue, Green]"
+2,"[Red, Black]"
+3,"[Black,White, Black, Red]"
