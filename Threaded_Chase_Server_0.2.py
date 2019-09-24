@@ -4,6 +4,9 @@ import array
 import sys, select
 import csv
 import time
+import threading
+import Tkinter
+import ttk
 
 __author__ = 'brian.mcmillan@steeplesquare.co.uk'
 
@@ -24,15 +27,15 @@ global StrideLength 								# Duration between steps through sequences
 
 
 def DmxSent(status):
-  if status.Succeeded():
+    if status.Succeeded():
 #    print('Success!')
-	pass
-  else:
-    print('Error: %s' % status.message, file=sys.stderr)
+	    pass
+    else:
+        print('Error: %s' % status.message, file=sys.stderr)
 
-  global wrapper
-  if wrapper:
-    wrapper.Stop()
+    global wrapper
+    if wrapper:
+        wrapper.Stop()
 
 class Signal:									# This tells the main DMX loop to keep running
 	go = True
@@ -234,7 +237,7 @@ def Stride():						# Go through all the sequences and increment by one step
 	for Sequence in Sequences.Get():
 		if Sequence[3] == True:
 			Group = Groups.Get(Sequence[1])
-			NFix = len(Group)
+#			NFix = len(Group)
 			Pattern = PatternList.Get(Sequence[2])
 			NColours = len(Pattern)
 			GroupIndex = Sequence[4]
@@ -246,18 +249,46 @@ def Stride():						# Go through all the sequences and increment by one step
 					PatternIndex = 0
 			Sequences.Update(Sequence[0], GroupIndex, PatternIndex)	
 
-def DMXLooper():
-	global StrideLength
+class DMXLooper:
+
+
+
+	def __init__(self):
+		global StrideLength		
+		self._RunOK = True
+
+		StrideLength = 1.0					# 1 second gap between strides
+
+		for i in range(512):				# Create and initialise DMX Universe
+			DMXData.insert(i, 0)
+
+
+	def terminate(self):
+		for i in range(512):				# Zero out the universe
+			DMXData.insert(i, 0)
+		self.client.SendDmx(Universe, DMXData, DmxSent)			
+		self._RunOK = False
+
+	def run(self, Universe, Count):
+		global wrapper
+		wrapper = None
+		wrapper = ClientWrapper()
+		self.client = wrapper.Client()  
+
+		while self._RunOK:
+			Stride()
+			self.client.SendDmx(Universe, DMXData, DmxSent)
+			wrapper.Run()					# send 1 dmx frame
+	#		print(DMXData[:50])
+			time.sleep(StrideLength)
+			
 
 if __name__ == '__main__':
 
 	global PatternList
 	global ColourTable
 	global Fixtures
-	global wrapper
-	global StrideLength
-
-	StrideLength = 1.0				# 1 second gap between strides
+	
 
 	ColourTable = c_ColourTable()
 	ColourTable.Print()
@@ -273,33 +304,31 @@ if __name__ == '__main__':
 
 	Groups = c_Groups()
 	Groups.Print()
-
-	for i in range(512):				# Create and initialise DMX Universe
-            DMXData.insert(i, 0)
-
-#	print (DMXData)
-# 
- 	wrapper = None
-	wrapper = ClientWrapper()
-	client = wrapper.Client()  			# send 1 dmx frame
+	
 	Universe = 1
+	Count = 0
+	dmxloop = DMXLooper()
+	looper = threading.Thread(target=dmxloop.run, args=(Universe, Count))
+	looper.start()
 
+	while True:
+		kbd_input = raw_input('\nCMD> ')
+		if len(kbd_input) == 0:
+			break
+		try:
+			print ("You want me to " + kbd_input)
+			if kbd_input == 'P':
+				PatternList.Print()
+			if kbd_input == 'S':
+				Sequences.Print()
+		except:
+			pass
+		else:
+			pass
+		finally:
+			pass
 
-
-
-#	while True:
-	for i in range(10):	
-		time.sleep(StrideLength)
-		print("About to stride:", end='')
-		Stride()
-		client.SendDmx(Universe, DMXData, DmxSent)
-		wrapper.Run()
-		print(" finished")
-#		print(DMXData[:50])
-										# Check for enter pressed		
-		i,o,e = select.select([sys.stdin],[],[],0.0001)
-		if i == [sys.stdin]: break
-	print ("BYE BYE")
-
+	dmxloop.terminate()
+	looper.join()
 	Fixtures.Save()
 	Groups.Save()

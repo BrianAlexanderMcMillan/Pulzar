@@ -5,6 +5,8 @@ import sys, select
 import csv
 import time
 import threading
+import Tkinter
+import ttk
 
 __author__ = 'brian.mcmillan@steeplesquare.co.uk'
 
@@ -247,30 +249,40 @@ def Stride():						# Go through all the sequences and increment by one step
 					PatternIndex = 0
 			Sequences.Update(Sequence[0], GroupIndex, PatternIndex)	
 
-def DMXLooper(Universe, signal):
-	global StrideLength
-	global wrapper
+class DMXLooper:
 
-	StrideLength = 1.0					# 1 second gap between strides
 
-	for i in range(512):				# Create and initialise DMX Universe
-            DMXData.insert(i, 0)
 
- 	wrapper = None
-	wrapper = ClientWrapper()
-	client = wrapper.Client()  
+	def __init__(self):
+		global StrideLength		
+		self._RunOK = True
 
-	print("About to stride:", end='')
+		StrideLength = 1.0					# 1 second gap between strides
 
-	while True:
-		Stride()
-		client.SendDmx(Universe, DMXData, DmxSent)
-		wrapper.Run()					# send 1 dmx frame
-		print(".", end='')
-#		print(DMXData[:50])
-		time.sleep(StrideLength)
-		if not signal.go:
-			break
+		for i in range(512):				# Create and initialise DMX Universe
+			DMXData.insert(i, 0)
+
+
+	def terminate(self):
+		for i in range(512):				# Zero out the universe
+			DMXData.insert(i, 0)
+		self.client.SendDmx(Universe, DMXData, DmxSent)			
+		self._RunOK = False
+
+	def run(self, Universe, signal):
+		global wrapper
+		wrapper = None
+		wrapper = ClientWrapper()
+		self.client = wrapper.Client()  
+
+		while self._RunOK:
+			Stride()
+			self.client.SendDmx(Universe, DMXData, DmxSent)
+			wrapper.Run()					# send 1 dmx frame
+	#		print(DMXData[:50])
+			time.sleep(StrideLength)
+			if not signal.go:
+				break
 
 if __name__ == '__main__':
 
@@ -299,12 +311,13 @@ if __name__ == '__main__':
 			
 	Universe = 1			
 	signal = Signal()
-	looper = threading.Thread(target=DMXLooper, args=(Universe, signal))
+	dmxloop = DMXLooper()
+	looper = threading.Thread(target=dmxloop.run, args=(Universe, signal))
 	looper.start()
 
 
 #	while True:
-	for i in range(100):	
+	for i in range(1000):	
 		print ("?", end='')
 										# Check for enter pressed		
 		i,o,e = select.select([sys.stdin],[],[],0.1)
@@ -312,6 +325,7 @@ if __name__ == '__main__':
 			
 	print ("BYE BYE")
 
+	dmxloop.terminate()
 	signal.go = False
 	looper.join()
 
